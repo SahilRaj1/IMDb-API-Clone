@@ -9,9 +9,16 @@ def genre_length(value):
 # Model Serializers
 class MovieSerializer(serializers.ModelSerializer):
 
+    # custom serializer field
+    len_title = serializers.SerializerMethodField()
+
     class Meta:
         model = Movie
         fields = "__all__"
+
+    # custom serializer field function
+    def get_len_title(self, object):
+        return len(object.title)
 
     # field level validation
     def validate_review(self, value):
