@@ -126,19 +126,50 @@ class WatchListDetailAV(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# # Routes for streaming platforms
+# class StreamPlatformViewSet(viewsets.ViewSet):
+#
+#     def list(self, request):
+#         queryset = StreamPlatform.objects.all()
+#         serializer = StreamPlatformSerializer(queryset, many=True)
+#         return Response(serializer.data)
+#
+#     def retrieve(self, request, pk=None):
+#         queryset = StreamPlatform.objects.all()
+#         platform = generics.get_object_or_404(queryset, pk=pk)
+#         serializer = StreamPlatformSerializer(platform)
+#         return Response(serializer.data)
+#
+#     def create(self, request):
+#         serializer = StreamPlatformSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(status=status.HTTP_201_CREATED)
+#         else:
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#
+#     def update(self, request, pk):
+#         queryset = StreamPlatform.objects.all()
+#         platform = generics.get_object_or_404(queryset, pk=pk)
+#         serializer = StreamPlatformSerializer(platform, data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(status=status.HTTP_202_ACCEPTED)
+#         else:
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#
+#     def delete(self, request, pk):
+#         queryset = StreamPlatform.objects.all()
+#         platform = generics.get_object_or_404(queryset, pk=pk)
+#         platform.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 # Routes for streaming platforms
-class StreamPlatformViewSet(viewsets.ViewSet):
+class StreamPlatformViewSet(viewsets.ModelViewSet):
+    queryset = StreamPlatform.objects.all()
+    serializer_class = StreamPlatformSerializer
 
-    def list(self, request):
-        queryset = StreamPlatform.objects.all()
-        serializer = StreamPlatformSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        queryset = StreamPlatform.objects.all()
-        platform = generics.get_object_or_404(queryset, pk=pk)
-        serializer = StreamPlatformSerializer(platform)
-        return Response(serializer.data)
 
 # # Routes for all streaming platforms
 # class StreamPlatformAV(APIView):
