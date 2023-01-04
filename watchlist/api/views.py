@@ -1,10 +1,43 @@
 from rest_framework.response import Response
-from watchlist.models import WatchList, StreamPlatform
 from rest_framework import status
-from watchlist.api.serializers import WatchListSerializer, StreamPlatformSerializer
 # from rest_framework.decorators import api_view
 from rest_framework.views import APIView
+from rest_framework import mixins
+from rest_framework import generics
+from watchlist.models import WatchList, StreamPlatform, Review
+from watchlist.api.serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
 
+
+# Routes for all reviews
+class ReviewList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    # endpoint to fetch all reviews
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    # endpoint to add a new review
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+# Routes for a specific review
+class ReviewDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    # endpoint to fetch a specific review
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    # endpoint to fetch all reviews
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    # endpoint to fetch all reviews
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 # Routes for all movies
 class WatchListAV(APIView):
