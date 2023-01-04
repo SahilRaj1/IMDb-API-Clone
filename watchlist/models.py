@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -20,7 +21,7 @@ class WatchList(models.Model):
     active = models.BooleanField(default=True)
     platform = models.ForeignKey(StreamPlatform, on_delete=models.CASCADE, related_name="watchlist")
     genre = models.CharField(max_length=30)
-    created = models.DateTimeField(auto_now_add=True)
+    created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
@@ -28,11 +29,12 @@ class WatchList(models.Model):
 
 # Reviews
 class Review(models.Model):
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")
     watchlist = models.ForeignKey(WatchList, on_delete=models.CASCADE, related_name="reviews")
     rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     description = models.CharField(max_length=255)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
     valid = models.BooleanField(default=True)
 
     def __str__(self):
