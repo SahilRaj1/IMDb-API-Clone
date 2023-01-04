@@ -9,15 +9,31 @@ from watchlist.api.serializers import WatchListSerializer, StreamPlatformSeriali
 
 
 # Routes for all reviews
-class ReviewList(generics.ListCreateAPIView):
-    queryset = Review.objects.all()
+class ReviewList(generics.ListAPIView):
+    # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+
+    # overwriting queryset
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        return Review.objects.filter(watchlist=pk)
 
 
 # Routes for a specific review
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+
+
+# Route for creating review for a specific movie
+class ReviewCreate(generics.CreateAPIView):
+    serializer_class = ReviewSerializer
+
+    # overwriting create method
+    def perform_create(self, serializer):
+        pk = self.kwargs.get('pk')
+        watchlist = WatchList.objects.get(pk=pk)
+        serializer.save(watchlist=watchlist)
 
 
 # # Routes for all reviews
