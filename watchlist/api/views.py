@@ -91,6 +91,8 @@ class ReviewCreate(generics.CreateAPIView):
 # Routes for all movies
 class WatchListAV(APIView):
 
+    permission_classes = [AdminOrReadOnly]
+
     # endpoint to fetch all movies
     def get(self, request):
         movies = WatchList.objects.all()
@@ -109,6 +111,8 @@ class WatchListAV(APIView):
 
 # Routes for a specific movie
 class WatchListDetailAV(APIView):
+
+    permission_classes = [AdminOrReadOnly]
 
     # endpoint to fetch a specific movie by id
     def get(self, request, pk):
@@ -188,6 +192,7 @@ class WatchListDetailAV(APIView):
 class StreamPlatformViewSet(viewsets.ModelViewSet):
     queryset = StreamPlatform.objects.all()
     serializer_class = StreamPlatformSerializer
+    permission_classes = [AdminOrReadOnly]
 
 
 # # Routes for all streaming platforms
