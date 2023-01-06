@@ -9,14 +9,13 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from watchlist.models import WatchList, StreamPlatform, Review
 from watchlist.api.serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
-from watchlist.api.permissions import AdminOrReadOnly, ReviewUserOrReadOnly
+from watchlist.api.permissions import AdminOrReadOnly, IsReviewUserOrReadOnly
 
 
 # Routes for all reviews
 class ReviewList(generics.ListAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]
 
     # overwriting queryset
     def get_queryset(self):
@@ -28,12 +27,13 @@ class ReviewList(generics.ListAPIView):
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [ReviewUserOrReadOnly  ]
+    permission_classes = [IsReviewUserOrReadOnly]
 
 
 # Route for creating review for a specific movie
 class ReviewCreate(generics.CreateAPIView):
     serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         return Review.objects.all()
