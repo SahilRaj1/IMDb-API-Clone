@@ -6,7 +6,7 @@ from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 from watchlist.models import WatchList, StreamPlatform, Review
 from watchlist.api.serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
 from watchlist.api.permissions import AdminOrReadOnly, ReviewUserOrReadOnly
@@ -16,7 +16,7 @@ from watchlist.api.permissions import AdminOrReadOnly, ReviewUserOrReadOnly
 class ReviewList(generics.ListAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [AdminOrReadOnly]
+    permission_classes = [IsAuthenticated]
 
     # overwriting queryset
     def get_queryset(self):
@@ -28,7 +28,7 @@ class ReviewList(generics.ListAPIView):
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [ReviewUserOrReadOnly]
+    permission_classes = [ReviewUserOrReadOnly  ]
 
 
 # Route for creating review for a specific movie
