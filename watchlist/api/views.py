@@ -15,6 +15,25 @@ from watchlist.api.throttling import ReviewListThrottle, ReviewCreateThrottle
 
 
 # Routes for all reviews
+class UserReview(generics.ListAPIView):
+    # queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    # throttle_classes = [AnonRateThrottle, ReviewListThrottle]
+
+    # overwriting queryset
+    # def get_queryset(self):
+    #     username = self.kwargs['username']
+    #     return Review.objects.filter(created_by__username=username)
+
+    def get_queryset(self):
+        queryset = Review.objects.all()
+        username = self.request.query_params.get('username')
+        if username is not None:
+            queryset = queryset.filter(created_by__username=username)
+        return queryset
+
+
+# Routes for all reviews
 class ReviewList(generics.ListAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
