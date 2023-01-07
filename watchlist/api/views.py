@@ -8,6 +8,8 @@ from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.throttling import AnonRateThrottle, UserRateThrottle, ScopedRateThrottle
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 from watchlist.models import WatchList, StreamPlatform, Review
 from watchlist.api.serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
 from watchlist.api.permissions import AdminOrReadOnly, IsReviewUserOrReadOnly
@@ -38,6 +40,8 @@ class ReviewList(generics.ListAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     throttle_classes = [AnonRateThrottle, ReviewListThrottle]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['created_by__username', 'valid']
 
     # overwriting queryset
     def get_queryset(self):
@@ -114,24 +118,29 @@ class ReviewCreate(generics.CreateAPIView):
 
 
 # Routes for all movies
-class WatchListAV(APIView):
+class WatchListAV(generics.ListCreateAPIView):
 
+    queryset = WatchList.objects.all()
+    serializer_class = WatchListSerializer
     permission_classes = [AdminOrReadOnly]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', 'platform__name']
+    ordering_fields = ['avg_rating']
 
-    # endpoint to fetch all movies
-    def get(self, request):
-        movies = WatchList.objects.all()
-        serializer = WatchListSerializer(movies, many=True)
-        return Response(serializer.data)
-
-    # endpoint to add a new movie
-    def post(self, request):
-        serializer = WatchListSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # # endpoint to fetch all movies
+    # def get(self, request):
+    #     movies = WatchList.objects.all()
+    #     serializer = WatchListSerializer(movies, many=True)
+    #     return Response(serializer.data)
+    #
+    # # endpoint to add a new movie
+    # def post(self, request):
+    #     serializer = WatchListSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(status=status.HTTP_201_CREATED)
+    #     else:
+    #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # Routes for a specific movie
