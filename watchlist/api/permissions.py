@@ -19,4 +19,4 @@ class IsReviewUserOrReadOnly(permissions.BasePermission):
             return True
         else:
             # check permissions for write request
-            return obj.created_by == request.user
+            return obj.created_by == request.user or request.user.is_staff
