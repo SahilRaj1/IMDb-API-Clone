@@ -14,6 +14,7 @@ from watchlist.models import WatchList, StreamPlatform, Review
 from watchlist.api.serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
 from watchlist.api.permissions import AdminOrReadOnly, IsReviewUserOrReadOnly
 from watchlist.api.throttling import ReviewListThrottle, ReviewCreateThrottle
+from watchlist.api.pagination import WatchListPagination
 
 
 # Routes for all reviews
@@ -126,6 +127,7 @@ class WatchListAV(generics.ListCreateAPIView):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', 'platform__name']
     ordering_fields = ['avg_rating']
+    pagination_class = [WatchListPagination]
 
     # # endpoint to fetch all movies
     # def get(self, request):
