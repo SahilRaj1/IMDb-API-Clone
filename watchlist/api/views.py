@@ -7,6 +7,7 @@ from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.throttling import AnonRateThrottle, UserRateThrottle
 from watchlist.models import WatchList, StreamPlatform, Review
 from watchlist.api.serializers import WatchListSerializer, StreamPlatformSerializer, ReviewSerializer
 from watchlist.api.permissions import AdminOrReadOnly, IsReviewUserOrReadOnly
@@ -16,6 +17,7 @@ from watchlist.api.permissions import AdminOrReadOnly, IsReviewUserOrReadOnly
 class ReviewList(generics.ListAPIView):
     # queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    throttle_classes = [AnonRateThrottle, UserRateThrottle]
 
     # overwriting queryset
     def get_queryset(self):
@@ -28,6 +30,7 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsReviewUserOrReadOnly]
+    throttle_classes = [AnonRateThrottle, UserRateThrottle]
 
 
 # Route for creating review for a specific movie
